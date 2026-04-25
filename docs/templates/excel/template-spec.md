@@ -1,11 +1,11 @@
 # [Spec Title] – Technical Specification
 
-**Created by:** [name]
-**Updated by:** [name]
-**Date Created:** [date]
-**Date Updated:** [date]
-**Version:** [0.0]
-**LLM Used:** [LLM] (optional — if an LLM was used)
+**Created by:** [Kayla Chhun]
+**Updated by:** [Kayla Chhun]
+**Date Created:** [04/24/2026
+**Date Updated:** [04/25/2026]
+**Version:** [1.0]
+**LLM Used:** [ChatGPT] (optional — if an LLM was used)
 
 **Role:** Financial Analyst / FP&A Analyst
 **Audience:** CFO or Director of FP&A
@@ -16,70 +16,62 @@
 
 ## 1. Problem Statement
 
-Briefly restate the company, time period, and analytical objective in professional terms.
+Apple Inc. is a publicly traded consumer electronics and technology company. This specification outlines the analytical framework for computing a comprehensive set of accounting and performance ratios using Apple’s FY2022 and FY2023 financial statements.
 
-Example phrasing:
-> [Company Name] is a publicly traded [industry] company. This specification outlines the analytical framework for computing 25+ accounting and performance ratios from the company's FY[year] financial statements, enabling management to assess financial health, operational efficiency, leverage, and value creation.
+The objective of the model is to:
 
-Include:
-- Company name and industry
-- Fiscal year(s) under review
-- Objective (e.g., assess financial health, benchmark performance, identify areas for improvement)
-- Decision context (CFO briefing, board presentation, investor relations)
+Evaluate Apple’s financial health across profitability, efficiency, leverage, and liquidity dimensions
+Identify operational strengths and potential risks
+Decompose return metrics (ROA and ROE) using DuPont analysis
+Support internal decision-making for CFO-level review and financial planning
 
+This model is designed for use in a CFO briefing or FP&A analysis, providing structured insights into Apple’s financial performance and capital efficiency.
 ---
 
 ## 2. Inputs (Known Variables)
 
-Create a clean, professional input table. This will become the foundation for your spreadsheet and future AI prompts. Group by source.
-
 ### Balance Sheet Items (Current Year and Prior Year)
 
-| Variable | Description | Named Range | Year | Example |
-|----------|-------------|-------------|------|---------|
-| Cash & marketable securities | Liquid assets | `BAL_cash_marketable_securities_[year]` | Both | 2,577 |
-| Receivables | Accounts receivable | `BAL_receivables_[year]` | Both | 498 |
-| Inventories | Inventory balance | `BAL_inventories_[year]` | Both | 8,992 |
-| Total current assets | Sum of current assets | `BAL_assets_current_[year]` | Both | 12,902 |
-| Net tangible fixed assets | PP&E less depreciation | `BAL_fixed_assets_net_[year]` | Current | 28,519 |
-| Total assets | All assets | `BAL_assets_total_[year]` | Both | 42,779 |
-| Total current liabilities | Short-term obligations | `BAL_liabilities_current_[year]` | Current | 14,487 |
-| Long-term debt | Non-current borrowings | `BAL_debt_long_term_[year]` | Both | 11,338 |
-| Total liabilities | All liabilities | `BAL_liabilities_total_[year]` | Current | 30,946 |
-| Shareholders' equity | Book value of equity | `BAL_equity_shareholders_[year]` | Both | 11,833 |
+| Variable |	Description |	Named Range |	Example |
+|----------|-------------|-------------|---------|
+| Cash & marketable securities |	Liquid assets	| `BAL_cash_[year]`	|	23,646 / 29,965 |
+| Receivables	| Accounts receivable |	`BAL_receivables_[year]` | 28,184 / 29,508 |
+| Inventories	| Inventory balance	| `BAL_inventory_[year]` |	4,946 / 6,331 |
+| Total current assets |	Sum of current assets |	`BAL_assets_current_[year]`	|	135,405 / 143,566 |
+| Net tangible fixed assets	| PP&E less depreciation |	`BAL_ppe_net_[year]`	|	42,117 / 43,715 |
+| Total assets	| All assets	| `BAL_assets_total_[year]`	| 352,755 / 352,583 |
+| Total current liabilities | Short-term obligations |	`BAL_liabilities_current_[year]`	|	153,982 / 145,308 |
+| Long-term debt | Non-current borrowings	| `BAL_debt_long_term_[year]`	|	98,959 / 95,281 |
+| Total liabilities |	All liabilities	| `BAL_liabilities_total_[year]`	|	302,083 / 290,437 |
+| Shareholders’ equity	| Book value of equity | `BAL_equity_[year]`	|	50,672 / 62,146 |
 
 ### Income Statement Items
 
 | Variable | Description | Named Range | Example |
 |----------|-------------|-------------|---------|
-| Net sales | Total revenue | `INC_sales` | 78,112 |
-| Cost of goods sold | Direct costs | `INC_cost_goods_sold` | 54,864 |
-| SG&A expenses | Operating expenses | `INC_sga` | 16,233 |
-| Depreciation | Non-cash expense | `INC_depreciation` | 2,357 |
-| EBIT | Operating income | `INC_ebit` | 4,658 |
-| Other income | Non-operating income | `INC_other_income` | 21 |
-| Interest expense | Cost of debt | `INC_interest_expense` | 477 |
-| Taxes | Income tax expense | `INC_taxes` | 921 |
-| Net income | Bottom line | `INC_net` | 3,281 |
-| Dividends | Shareholder distributions | `INC_dividends` | 1,330 |
+| Revenue	| Total sales	| `INC_revenue` |	383,285 |
+| Cost of goods sold |	Direct costs |	`INC_cogs` |	214,137 |
+| EBIT |	Operating income |	`INC_ebit`	| 114,301 |
+| Interest expense |	Cost of debt | `INC_interest` |	3,933 |
+| Pre-tax income | Income before taxes |	`INC_pre_tax` |	113,736 |
+| Taxes	| Income tax expense |	`INC_taxes` |	16,741 |
+| Net income |	Profit after tax	| `INC_net_income` |	96,995 |
+| Depreciation |	Non-cash expense |	`INC_depreciation` |	11,519 |
 
 ### Cash Flow Statement Items
 
 | Variable | Description | Named Range | Example |
 |----------|-------------|-------------|---------|
-| Cash from operations | Operating cash flow | `CASH_operating` | 7,117 |
-| Cash from investments | Investing cash flow | `CASH_investments` | -2,944 |
+| Cash from operations |	Operating cash flow |	`CASH_operating` | 110,543 |
+| Cash from investments |	Investing cash flow |	`CASH_investing` |	-3,765 |
+| Cash from financing |	Financing cash flow	| `CASH_financing` |	-108,488 |
 
 ### Market / Analyst Inputs
 
 | Variable | Description | Named Range | Example |
 |----------|-------------|-------------|---------|
-| Share price | Market price per share | `share_price` | 109.53 |
-| Shares outstanding | Total shares (millions) | `shares_outstanding` | 500 |
-| Cost of capital | WACC or required return | `cost_capital` | 7.6% |
-| Tax rate | Statutory or effective rate | `tax_rate` | 21% |
-
-> *Tip:* Keep labels short and standardized. These names will become Excel named ranges and AI prompt parameters.
+| Tax rate	| Effective tax rate |	`tax_rate`	| 14.7% |
+| Cost of capital |	Required return	| `cost_capital` |	8.0% |
 
 ---
 
