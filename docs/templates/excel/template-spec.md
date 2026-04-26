@@ -1,4 +1,4 @@
-# [Spec Title] – Technical Specification
+# [Apple Inc. Financial Ratio Analysis Model] – Technical Specification
 
 **Created by:** [Kayla Chhun]
 **Updated by:** [Kayla Chhun]
