@@ -10,8 +10,6 @@
 **Role:** Financial Analyst / FP&A Analyst
 **Audience:** CFO or Director of FP&A
 
-**Purpose:** Provide a professional, quantitative specification documenting your Excel model's analytical structure for computing and interpreting accounting and performance ratios from a public company's financial statements. This post-build spec captures what you built, what you learned, and how the model should be refined.
-
 ---
 
 ## 1. Problem Statement
@@ -203,27 +201,3 @@ Describe the logic and sequencing of your analysis — as if briefing a junior a
 * Market-based valuation metrics
 - Develop a formal executive summary interpreting the ratio results for senior management.
 ---
-
-## Writing a Strong Specification
-
-**Your spec should:**
-- **Communicate like a professional:** clear, structured, and jargon-free.
-- **Think one stage ahead:** your spec should feed directly into your Stage 4 AI prompt and final analysis.
-- **Be internally consistent:** variables, labels, and steps must align with your actual model.
-- **Be reproducible:** a new analyst should be able to rebuild the model from your spec without your help.
-- **Be reflective:** the "Model Review" section should show honest assessment of what worked and what needs improvement.
-- **Be executive-relevant:** the CFO should understand *what you built* and *why it matters*.
-
----
-
-## How This Sets You Up for Stage 4
-
-| What You Write in Stage 3 | What It Enables in Stage 4 |
-|----------------------------|----------------------------|
-| Named ranges with precise definitions | AI uses standardized variable names, no improvisation |
-| Step-by-step calculation flow | AI generates correct, auditable formulas |
-| Model review and improvement notes | AI builds the *improved* version, not just a replica |
-| Explicit output requirements | AI produces the exact tables, charts, and sections you need |
-| "Outputs" section | Drives your interpretation and recommendation |
-
-> *By completing your spec after the build, you create a machine-readable blueprint that transforms your prototype into a polished, documented model — demonstrating the reflective documentation skills valued by finance teams and auditors alike.*
