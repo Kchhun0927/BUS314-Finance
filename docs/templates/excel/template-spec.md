@@ -77,16 +77,14 @@ This model is designed for use in a CFO briefing or FP&A analysis, providing str
 
 ## 3. Assumptions & Constraints
 
-State all conventions used. Clarity here ensures reproducibility.
-
-Example list:
-- All figures reported in millions unless otherwise noted.
-- Tax rate assumed at statutory 21% (or effective rate from financial statements).
-- Cost of capital estimated at [X]% based on [method/assumption].
-- Interest rates quoted on a simple annual basis.
-- Depreciation figure taken from [Income Statement / Cash Flow Statement].
-- Start-of-year values use prior fiscal year's Balance Sheet.
-- No off-balance-sheet items or contingent liabilities included.
+All financial figures are reported in millions of USD
+Tax rate is derived from financial statements (~14.7%)
+Average values are calculated using simple averages of start and end values
+No off-balance-sheet liabilities are included
+Market-based inputs (share price, shares outstanding) are not included
+Interest expense is treated as a single-period value
+Depreciation is included for cash coverage calculations
+Start-of-year values correspond to FY2022 balance sheet data
 
 ---
 
@@ -95,38 +93,59 @@ Example list:
 Describe the logic and sequencing of your analysis — as if briefing a junior analyst or AI model builder. Use named-range pseudocode.
 
 ### Step 1: Derived Inputs
-1. Compute `market_capitalization` = `share_price` x `shares_outstanding`
-2. Compute `currentYear_after_tax_operating_income` = `INC_net` + (1 - `tax_rate`) x `INC_interest_expense`
-3. Compute daily figures: `currentYear_daily_sales_average` = `INC_sales` / 365
-4. Compute averages: `avg_equity` = AVERAGE(`startYear_equity`, `currentYear_equity`)
-5. Compute `currentYear_working_capital_net` = `currentYear_assets_current` - `currentYear_liabilities_current`
-
+1. Calculate `market_capitalization` = `share_price` × `shares_outstanding`
+2. Calculate `after_tax_operating_income` = `INC_ebit` × (1 − `tax_rate`)
+3. Calculate `daily_sales` = `INC_revenue` / 365
+4. Calculate `avg_assets` = AVERAGE(`BAL_assets_total_2022`, `BAL_assets_total_2023`)
+5. Calculate `avg_equity` = AVERAGE(`BAL_equity_2022`, `BAL_equity_2023`)
+6. Calculate `avg_inventory` = AVERAGE(`BAL_inventory_2022`, `BAL_inventory_2023`)
+7. Calculate `avg_receivables` = AVERAGE(`BAL_receivables_2022`, `BAL_receivables_2023`)
+8. Calculate `startYear_total_capital` = `BAL_debt_long_term_2022` + `BAL_equity_2022`
+9. Calculate `currentYear_total_capital` = `BAL_debt_long_term_2023` + `BAL_equity_2023`
+10. Calculate `avg_total_capital` = AVERAGE(`startYear_total_capital`, `currentYear_total_capital`)
+11. Calculate `currentYear_nwc` = `BAL_assets_current_2023` − `BAL_liabilities_current_2023`
+    
 ### Step 2: Performance Ratios
-- MVA = `market_capitalization` - `currentYear_equity`
-- Market-to-Book = `market_capitalization` / `currentYear_equity`
-- EVA = `currentYear_after_tax_operating_income` - (`cost_capital` x `startYear_total_capitalization`)
+- MVA = `market_capitalization` − `BAL_equity_2023`
+- Market_to_Book = `market_capitalization` / `BAL_equity_2023`
+- EVA = `after_tax_operating_income` − (`cost_capital` × `startYear_total_capital`)
 
 ### Step 3: Profitability Ratios
-- ROA = `currentYear_after_tax_operating_income` / `startYear_total_assets`
-- ROC = `currentYear_after_tax_operating_income` / `startYear_total_capitalization`
-- ROE = `INC_net` / `startYear_equity`
+- `ROA_start` = `INC_net_income` / `BAL_assets_total_2022`
+- `ROC_start` = `after_tax_operating_income` / `startYear_total_capital`
+- `ROE_start` = `INC_net_income` / `BAL_equity_2022`
 - (Repeat with average denominators)
+- `ROA_avg` = `INC_net_income` / `avg_assets`
+- `ROC_avg` = `after_tax_operating_income` / `avg_total_capital`
+- `ROE_avg` = `INC_net_income` / `avg_equity`
 
 ### Step 4: Efficiency Ratios
-- Asset Turnover = `INC_sales` / `startYear_total_assets`
-- Receivables Turnover, Inventory Turnover, margins, etc.
-
+- `Asset_Turnover` = `INC_sales` / `startYear_total_assets`
+- `Receivables_Turnover` = `INC_revenue` / `avg_receivables`
+- `Inventory_Turnover` = `INC_cogs` / `avg_inventory`
+- `Days_in_Inventory` = 365 / `Inventory_Turnover`
+- `Avg_Collection_Period` = 365 / `Receivables_Turnover`
+- `Profit_Margin` = `INC_net_income` / `INC_revenue`
+- `Operating_Margin` = `INC_ebit` / `INC_revenue`
+  
 ### Step 5: Leverage Ratios
-- Long-term Debt Ratio, Debt-Equity, Total Debt Ratio
-- Times Interest Earned, Cash Coverage, Debt Burden, Leverage Ratio
+- `Long_Term_Debt_Ratio` = `BAL_debt_long_term_2023` / `BAL_assets_total_2023`
+- `Total_Debt_Ratio` = `BAL_liabilities_total_2023` / `BAL_assets_total_2023`
+- `Debt_to_Equity` = `BAL_debt_long_term_2023` / `BAL_equity_2023`
+- `Times_Interest_Earned` = `INC_ebit` / `INC_interest`
+- `Cash_Coverage` = (`INC_ebit` + `INC_depreciation`) / `INC_interest`
+- `Debt_Burden` = `INC_net_income` / `INC_ebit`
+- `Leverage_Ratio` = `BAL_assets_total_2023` / `BAL_equity_2023`
 
 ### Step 6: Liquidity Ratios
-- NWC-to-Assets, Current Ratio, Quick Ratio, Cash Ratio
+- `NWC_to_Asset` = `currentYear_nwc` / `BAL_assets_total_2023`
+- `Current_Ratio` = `BAL_assets_current_2023` / `BAL_liabilities_current_2023`
+- `Quick_Ratio` = (`BAL_assets_current_2023` − `BAL_inventory_2023`) / `BAL_liabilities_current_2023`
+- `Cash_Ratio` = `BAL_cash_2023` / `BAL_liabilities_current_2023`
 
 ### Step 7: Du Pont Decomposition
-- Du Pont ROA = Asset Turnover x Operating Profit Margin
-- Du Pont ROE = Leverage x Asset Turnover x Operating Profit Margin x Debt Burden
-
+- Du Pont ROA = `Profit_Margin` × `Asset_Turnover`
+- Du Pont ROE = `Profit_Margin` × `Asset_Turnover` × `Leverage_Ratio`
 ---
 
 ## 5. Outputs
@@ -142,24 +161,47 @@ Describe the logic and sequencing of your analysis — as if briefing a junior a
 
 ## 7. Model Review — What Worked & What to Improve
 
-Reflect candidly on your Stage 2 Excel model. This section is what makes a post-build spec more valuable than a pre-build plan.
+| What worked well |
+- The model effectively links financial statement inputs to ratio outputs using consistent named ranges.
+- Clear separation between inputs, calculations, and outputs improved readability and usability.
+- Average-based ratios (ROA, ROE, ROC) produced results consistent with expected financial behavior.
+- Du Pont decomposition closely matched directly calculated ROA and ROE, confirming internal consistency of the model.
+  
+| What would be improved |
+- Naming conventions could be standardized further (e.g., consistent use of “revenue” vs. “sales”).
+- Pre-tax income could more explicitly incorporate non-operating income components.
+- Market-based inputs (share price and shares outstanding) were not included, limiting performance ratio analysis (e.g., MVA, Market-to-Book).
+- Some formulas initially relied on start-year values only and were later adjusted to include averages for improved accuracy.
 
-- **What worked well?** Which formulas, layouts, or named ranges operated as intended?
-- **What would you change?** Were there workarounds, naming inconsistencies, or layout issues worth fixing?
-- **What would make the model more auditable?** Consider formula documentation, color coding, or structural changes.
-- **What additional analysis is worth including?** Industry comparisons, trend data, additional ratios?
-
-> *Tip:* Be honest and specific. "The Du Pont decomposition matched my direct ROA within 0.1%" is useful. "Everything worked fine" is not.
+| Auditability improvements |
+- Add a validation check to ensure balance sheet consistency:
+`BAL_assets_total_2023` = `BAL_liabilities_total_2023` + `BAL_equity_2023`
+- Expand formula documentation to include all intermediate calculations and derived inputs
+- Separate assumptions (tax rate, cost of capital) into a clearly labeled section.
+- Apply consistent color-coding conventions (e.g., yellow = inputs, blue = assumptions, green = formulas, gray = outputs).
+  
+| Additional analysis |
+- Industry benchmarking against comparable firms.
+- Multi-year trend analysis to evaluate performance over time.
+- Inclusion of valuation metrics such as EVA, MVA, and Market-to-Book.
+- Cash conversion cycle analysis for deeper operational insight.
 
 ---
 
 ## 8. Limitations & Next Steps
+| Limitations |
+- The model does not include market-based valuation metrics due to missing share price and shares outstanding inputs.
+- Analysis is limited to a two-year comparison (FY2022–FY2023), restricting trend evaluation.
+- Tax rate and cost of capital are simplified assumptions and may not reflect forward-looking conditions.
+- No sensitivity or scenario analysis is incorporated.
 
-Briefly note any analytical limits and outline your next step.
-
-Example phrasing:
-> This specification does not incorporate industry peer comparisons, multi-year trend analysis, or off-balance-sheet items. The next phase will involve writing a structured AI prompt and final analysis interpreting the ratio results for senior management.
-
+| Next Steps |
+- Convert this specification into a structured AI prompt to automate ratio calculations and analysis.
+- Expand the model to include:
+* Multi-year financial analysis
+* Industry peer benchmarking
+* Market-based valuation metrics
+- Develop a formal executive summary interpreting the ratio results for senior management.
 ---
 
 ## Writing a Strong Specification
