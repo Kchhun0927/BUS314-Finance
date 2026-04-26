@@ -18,10 +18,10 @@ Apple Inc. is a publicly traded consumer electronics and technology company. Thi
 
 The objective of the model is to:
 
-Evaluate Apple’s financial health across profitability, efficiency, leverage, and liquidity dimensions
-Identify operational strengths and potential risks
-Decompose return metrics (ROA and ROE) using DuPont analysis
-Support internal decision-making for CFO-level review and financial planning
+- Evaluate Apple’s financial health across profitability, efficiency, leverage, and liquidity dimensions.
+- Identify operational strengths and potential risks.
+- Decompose return metrics (ROA and ROE) using DuPont analysis.
+- Support internal decision-making for CFO-level review and financial planning.
 
 This model is designed for use in a CFO briefing or FP&A analysis, providing structured insights into Apple’s financial performance and capital efficiency.
 ---
